@@ -8,8 +8,15 @@ const saltRounds = 10;
 
 const _ = require('underscore');
 
+const { verificatoken, verificaAdmin_Role } = require('../middlewares/autentication')
 
-app.get('/usuario', function(req, res) {
+app.get('/usuario', verificatoken, (req, res) => {
+
+    // return res.json({
+    //     usuario: req.usuario,
+    //     nombre: req.usuario.nombre,
+    //     email: req.usuario.email
+    // })
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
@@ -26,7 +33,7 @@ app.get('/usuario', function(req, res) {
                     err
                 });
             }
-            Usuario.count({ estado: true }, (err, conteo) => {
+            Usuario.countDocuments({ estado: true }, (err, conteo) => {
 
                 res.json({
                     ok: true,
@@ -37,7 +44,7 @@ app.get('/usuario', function(req, res) {
         });
 });
 
-app.post('/usuario', function(req, res) {
+app.post('/usuario', [verificatoken, verificaAdmin_Role], (req, res) => {
     let body = req.body;
     let usuario = new Usuario({
         nombre: body.nombre,
@@ -75,7 +82,7 @@ app.post('/usuario', function(req, res) {
     //     });
     // }
 });
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', [verificatoken, verificaAdmin_Role], (req, res) => {
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'role', 'img', 'estado']);
 
@@ -92,7 +99,7 @@ app.put('/usuario/:id', function(req, res) {
         });
     });
 });
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', [verificatoken, verificaAdmin_Role], (req, res) => {
     let id = req.params.id;
     // lo elimina definitivamente
     // Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
