@@ -6,7 +6,7 @@ process.env.PORT = process.env.PORT || 3000;
 // ========================
 // Expiracion
 // ========================
-process.env.CADUCIDAD_TOKEN = 60 * 60 * 60 * 60;
+process.env.CADUCIDAD_TOKEN = '48h';
 // ========================
 // seed
 // ========================
